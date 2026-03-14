@@ -1,0 +1,18 @@
+<div class="page">
+  <div class="header">
+    <h2>Cat List</h2>
+
+    <button mat-raised-button color="primary" (click)="openCreateDialog()">Add Cat</button>
+  </div>
+
+  @if (store.loading()) {
+    <p>Loading cats...</p>
+  }
+
+  <div class="cat-grid">
+    @for (cat of store.cats(); track cat.id) {
+      <app-cat-card [cat]="cat" (delete)="deleteCat($event)" (edit)="editCat($event)">
+      </app-cat-card>
+    }
+  </div>
+</div>

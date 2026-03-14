@@ -1,0 +1,15 @@
+<mat-card class="cat-card">
+  <mat-card-title>
+    {{ cat().name }}
+  </mat-card-title>
+
+  <mat-card-content>
+    <p><strong>Age:</strong> {{ cat().age }}</p>
+    <p>{{ cat().description }}</p>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button color="primary" (click)="editCat()">Edit</button>
+    <button mat-button color="warn" (click)="deleteCat()">Delete</button>
+  </mat-card-actions>
+</mat-card>

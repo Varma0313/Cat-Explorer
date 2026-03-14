@@ -1,0 +1,16 @@
+.page {
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.cat-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}

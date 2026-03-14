@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Cat' : 'Create Cat' }}</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>Name *</mat-label>
+      <input matInput formControlName="name" />
+      @if (form.get('name')?.invalid && form.get('name')?.touched) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Age *</mat-label>
+      <input matInput formControlName="age" />
+      @if (form.get('age')?.invalid && form.get('age')?.touched) {
+        <mat-error>Age is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description *</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+      @if (form.get('description')?.invalid && form.get('description')?.touched) {
+        <mat-error>Description is required</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="submit()">
+    {{ isEditMode ? 'Save Changes' : 'Create' }}
+  </button>
+</div>
