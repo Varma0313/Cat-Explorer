@@ -101,3 +101,21 @@ body {
     transform: translateY(0);
   }
 }
+
+@media (max-width: 480px) {
+  .mat-mdc-dialog-container {
+    max-width: 92vw !important;
+    width: 92vw !important;
+    margin: 0 auto !important;
+  }
+
+  .mat-mdc-dialog-surface {
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+  }
+
+  // Push dialog up above bottom nav
+  .cdk-overlay-container {
+    bottom: 60px !important;
+  }
+}

@@ -1,10 +1,12 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CatApiService, CatPayload } from '../../../../core/services/cat-api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CatPayload } from '../../../../core/services/cat-api.service';
+import { CatsStore } from '../../store/cats.store';
 import { Cat } from '../../../../core/models/cat.model';
 
 @Component({
@@ -22,23 +24,25 @@ import { Cat } from '../../../../core/models/cat.model';
   styleUrl: './create-cat-dialog.scss',
 })
 export class CreateCatDialog implements OnInit {
-  // All inject() — no constructor needed
   private readonly fb = inject(FormBuilder);
-  private readonly api = inject(CatApiService);
+  private readonly store = inject(CatsStore); //  Use store, not API directly
   private readonly dialogRef = inject(MatDialogRef<CreateCatDialog, boolean>);
-
-  // Typed properly — Cat | null, no any
+  private readonly snackBar = inject(MatSnackBar);
   readonly data = inject<Cat | null>(MAT_DIALOG_DATA);
 
-  // Computed title based on mode
+  readonly submitting = signal<boolean>(false);
+
   get isEditMode(): boolean {
     return !!this.data?.id;
   }
 
   readonly form = this.fb.group({
-    name: ['', Validators.required],
-    age: ['', Validators.required],
-    description: ['', Validators.required],
+    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
+    age: [
+      '',
+      [Validators.required, Validators.pattern('^[0-9]+$'), Validators.min(1), Validators.max(30)],
+    ],
+    description: ['', [Validators.required, Validators.minLength(2)]],
   });
 
   ngOnInit(): void {
@@ -52,7 +56,12 @@ export class CreateCatDialog implements OnInit {
   }
 
   submit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.submitting.set(true);
 
     const payload: CatPayload = {
       name: this.form.value.name!,
@@ -61,14 +70,22 @@ export class CreateCatDialog implements OnInit {
     };
 
     if (this.isEditMode) {
-      this.api.updateCat(this.data!.id!, payload).subscribe({
-        next: () => this.dialogRef.close(true),
-        error: () => this.dialogRef.close(false),
+      //  Call store.updateCat — updates signal immediately
+      this.store.updateCat(this.data!.id!, payload);
+      this.submitting.set(false);
+      this.dialogRef.close(true);
+      this.snackBar.open(` "${payload.name}" updated!`, 'Close', {
+        duration: 2000,
+        panelClass: 'snack-success',
       });
     } else {
-      this.api.createCat(payload).subscribe({
-        next: () => this.dialogRef.close(true),
-        error: () => this.dialogRef.close(false),
+      //  Call store.createCat — adds to signal immediately
+      this.store.createCat(payload);
+      this.submitting.set(false);
+      this.dialogRef.close(true);
+      this.snackBar.open(` "${payload.name}" added!`, 'Close', {
+        duration: 2000,
+        panelClass: 'snack-success',
       });
     }
   }

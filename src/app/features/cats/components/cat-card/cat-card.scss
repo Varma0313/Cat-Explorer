@@ -1,0 +1,185 @@
+.cat-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  &.expanded {
+    border-color: #0d9488;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+    transform: translateY(0);
+  }
+}
+
+// ── MAIN ROW ──────────────────────────────────────
+.card-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+}
+
+// ── AVATAR ────────────────────────────────────────
+.cat-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+}
+
+// ── INFO ──────────────────────────────────────────
+.card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cat-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── AGE BADGE ─────────────────────────────────────
+.age-badge {
+  background: var(--teal-light);
+  color: var(--teal);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ── EXPAND ICON ───────────────────────────────────
+.expand-icon {
+  color: var(--text-secondary);
+  font-size: 20px !important;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+// ── EXPANDED DETAIL ───────────────────────────────
+.card-detail {
+  animation: expand-row 0.2s ease;
+}
+
+.detail-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 20px;
+}
+
+.detail-body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.detail-icon {
+  font-size: 18px !important;
+  color: var(--teal);
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.detail-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.id-text {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  word-break: break-all;
+  color: #94a3b8;
+}
+
+// ── ACTIONS ───────────────────────────────────────
+.card-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 16px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+.edit-btn {
+  background: var(--teal-light);
+  color: var(--teal);
+
+  &:hover {
+    background: var(--teal);
+    color: white;
+  }
+}
+
+.delete-btn {
+  background: var(--rose-light);
+  color: var(--rose);
+
+  &:hover {
+    background: var(--rose);
+    color: white;
+  }
+}

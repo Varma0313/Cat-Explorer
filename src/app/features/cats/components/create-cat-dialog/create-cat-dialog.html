@@ -1,36 +1,93 @@
-<h2 mat-dialog-title>{{ isEditMode ? 'Edit Cat' : 'Create Cat' }}</h2>
+<div class="dialog-container">
+  @if (submitting()) {
+    <div class="cat-runner-track">
+      <img
+        class="cat-gif"
+        src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
+        alt="loading"
+      />
+      <span class="saving-text">Saving your cat...</span>
+    </div>
+  }
 
-<div mat-dialog-content>
-  <form [formGroup]="form">
-    <mat-form-field appearance="outline">
-      <mat-label>Name *</mat-label>
-      <input matInput formControlName="name" />
-      @if (form.get('name')?.invalid && form.get('name')?.touched) {
-        <mat-error>Name is required</mat-error>
-      }
-    </mat-form-field>
+  <div class="dialog-header">
+    <div class="dialog-icon">🐱</div>
+    <div>
+      <h2 class="dialog-title">
+        {{ isEditMode ? 'Edit Cat' : 'Add New Cat' }}
+      </h2>
+      <p class="dialog-subtitle">
+        {{ isEditMode ? 'Update your cat details below' : 'Fill in the details to add a new cat' }}
+      </p>
+    </div>
+  </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Age *</mat-label>
-      <input matInput formControlName="age" />
-      @if (form.get('age')?.invalid && form.get('age')?.touched) {
-        <mat-error>Age is required</mat-error>
-      }
-    </mat-form-field>
+  <div class="dialog-body">
+    <form [formGroup]="form">
+      <div class="field-wrap">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Cat Name</mat-label>
+          <input matInput formControlName="name" placeholder="e.g. Whiskers" maxlength="25" />
+          <mat-hint align="end"> {{ form.get('name')?.value?.length ?? 0 }}/25 </mat-hint>
+          @if (form.get('name')?.errors?.['required'] && form.get('name')?.touched) {
+            <mat-error>Cat name is required!</mat-error>
+          }
+          @if (form.get('name')?.errors?.['minlength'] && form.get('name')?.touched) {
+            <mat-error>Minimum 2 characters required!</mat-error>
+          }
+        </mat-form-field>
+      </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Description *</mat-label>
-      <textarea matInput formControlName="description" rows="3"></textarea>
-      @if (form.get('description')?.invalid && form.get('description')?.touched) {
-        <mat-error>Description is required</mat-error>
-      }
-    </mat-form-field>
-  </form>
-</div>
+      <div class="field-wrap">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Age (years)</mat-label>
+          <input
+            matInput
+            formControlName="age"
+            placeholder="e.g. 3"
+            type="number"
+            min="1"
+            max="30"
+          />
+          @if (form.get('age')?.errors?.['required'] && form.get('age')?.touched) {
+            <mat-error>Age is required!</mat-error>
+          }
+          @if (form.get('age')?.errors?.['pattern'] && form.get('age')?.touched) {
+            <mat-error>Only numbers allowed</mat-error>
+          }
+          @if (form.get('age')?.errors?.['min'] && form.get('age')?.touched) {
+            <mat-error>Minimum age is 1</mat-error>
+          }
+          @if (form.get('age')?.errors?.['max'] && form.get('age')?.touched) {
+            <mat-error>Maximum age is 30</mat-error>
+          }
+        </mat-form-field>
+      </div>
 
-<div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button color="primary" (click)="submit()">
-    {{ isEditMode ? 'Save Changes' : 'Create' }}
-  </button>
+      <div class="field-wrap">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            formControlName="description"
+            rows="3"
+            placeholder="Tell us about this cat..."
+          ></textarea>
+          @if (form.get('description')?.errors?.['required'] && form.get('description')?.touched) {
+            <mat-error>Description is required!</mat-error>
+          }
+          @if (form.get('description')?.errors?.['minlength'] && form.get('description')?.touched) {
+            <mat-error>Minimum 2 characters required!</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+
+  <div class="dialog-actions">
+    <button class="cancel-btn" mat-dialog-close [disabled]="submitting()">Cancel</button>
+    <button class="submit-btn" (click)="submit()" [disabled]="submitting() || form.invalid">
+      {{ submitting() ? 'Saving...' : isEditMode ? 'Save Changes' : 'Create' }}
+    </button>
+  </div>
 </div>

@@ -1,0 +1,126 @@
+<div class="dashboard">
+  <!-- ── PAGE TITLE ─────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-title-wrap">
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle">Welcome back! Here's your cat collection overview.</p>
+    </div>
+
+    <div class="header-actions">
+      @if (store.cats().length > 0) {
+        <button class="export-btn" (click)="exportCsv()">
+          <span class="material-icons">download</span>
+          Export CSV
+        </button>
+      }
+      <button class="view-all-btn" (click)="goToCats()">
+        <span class="material-icons">pets</span>
+        View All Cats
+      </button>
+    </div>
+  </div>
+
+  <!-- ── STAT CARDS ─────────────────────────────── -->
+  @if (store.loading()) {
+    <div class="skeleton-grid">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton-stat skeleton"></div>
+      }
+    </div>
+  } @else {
+    <section class="stats-grid">
+      <div class="stat-card" (click)="goToCats()">
+        <div class="stat-icon-wrap teal">
+          <span class="material-icons">pets</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ store.totalCats() }}</span>
+          <span class="stat-label">Total Cats</span>
+        </div>
+        <span class="material-icons stat-arrow">arrow_forward</span>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap amber">
+          <span class="material-icons">cake</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ store.avgAge() }}y</span>
+          <span class="stat-label">Average Age</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap green">
+          <span class="material-icons">child_care</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">
+            {{ store.youngestCat()?.name ?? '—' }}
+          </span>
+          <span class="stat-label">
+            Youngest
+            @if (store.youngestCat()) {
+              · {{ store.youngestCat()!.age }}y
+            }
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap rose">
+          <span class="material-icons">elderly</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">
+            {{ store.oldestCat()?.name ?? '—' }}
+          </span>
+          <span class="stat-label">
+            Oldest
+            @if (store.oldestCat()) {
+              · {{ store.oldestCat()!.age }}y
+            }
+          </span>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- ── RECENT CATS PREVIEW ────────────────────── -->
+  @if (!store.loading() && store.cats().length > 0) {
+    <section class="recent-section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Cats</h2>
+        <button class="text-btn" (click)="goToCats()">
+          View all
+          <span class="material-icons">chevron_right</span>
+        </button>
+      </div>
+
+      <div class="recent-list">
+        @for (cat of store.cats().slice(0, 5); track cat.id) {
+          <div class="recent-item" (click)="goToCats()">
+            <div class="recent-avatar" [style.background]="getAvatarColor(cat.name)">
+              {{ cat.name.charAt(0).toUpperCase() }}
+            </div>
+            <div class="recent-info">
+              <span class="recent-name">{{ cat.name }}</span>
+              <span class="recent-desc">{{ cat.description }}</span>
+            </div>
+            <span class="recent-age">{{ cat.age }}y</span>
+            <span class="material-icons recent-arrow">chevron_right</span>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- ── EMPTY STATE ────────────────────────────── -->
+  @if (!store.loading() && store.cats().length === 0) {
+    <div class="empty-state">
+      <span class="material-icons empty-icon">sentiment_dissatisfied</span>
+      <h3>No cats yet!</h3>
+      <p>Add your first cat to get started</p>
+    </div>
+  }
+</div>

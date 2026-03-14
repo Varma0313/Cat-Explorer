@@ -1,15 +1,47 @@
-<mat-card class="cat-card">
-  <mat-card-title>
-    {{ cat().name }}
-  </mat-card-title>
+<div class="cat-card" [class.expanded]="isExpanded()">
+  <!-- MAIN ROW -->
+  <div class="card-main" (click)="toggleExpand()">
+    <div class="cat-avatar" [style.background]="avatarColor()">
+      {{ cat().name.charAt(0).toUpperCase() }}
+    </div>
+    <div class="card-info">
+      <span class="cat-name">{{ cat().name }}</span>
+      <span class="cat-desc">{{ cat().description }}</span>
+    </div>
+    <span class="age-badge">{{ cat().age }}y</span>
+    <span class="material-icons expand-icon">
+      {{ isExpanded() ? 'expand_less' : 'expand_more' }}
+    </span>
+  </div>
 
-  <mat-card-content>
-    <p><strong>Age:</strong> {{ cat().age }}</p>
-    <p>{{ cat().description }}</p>
-  </mat-card-content>
-
-  <mat-card-actions>
-    <button mat-button color="primary" (click)="editCat()">Edit</button>
-    <button mat-button color="warn" (click)="deleteCat()">Delete</button>
-  </mat-card-actions>
-</mat-card>
+  <!-- EXPANDED DETAIL -->
+  @if (isExpanded()) {
+    <div class="card-detail">
+      <div class="detail-divider"></div>
+      <div class="detail-body">
+        <div class="detail-row">
+          <span class="material-icons detail-icon">description</span>
+          <span class="detail-text">{{ cat().description }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="material-icons detail-icon">cake</span>
+          <span class="detail-text">{{ cat().age }} years old</span>
+        </div>
+        <div class="detail-row">
+          <span class="material-icons detail-icon">fingerprint</span>
+          <span class="detail-text id-text">{{ cat().id }}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="action-btn edit-btn" (click)="editCat(); $event.stopPropagation()">
+          <span class="material-icons">edit</span>
+          Edit
+        </button>
+        <button class="action-btn delete-btn" (click)="deleteCat(); $event.stopPropagation()">
+          <span class="material-icons">delete_outline</span>
+          Delete
+        </button>
+      </div>
+    </div>
+  }
+</div>

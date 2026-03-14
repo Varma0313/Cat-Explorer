@@ -1,1 +1,101 @@
-<router-outlet></router-outlet>
+<div class="app-shell">
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="material-icons brand-icon">pets</span>
+        <span class="brand-name">Cat Explorer</span>
+      </div>
+
+      <nav class="header-nav">
+        <a
+          class="nav-link"
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Dashboard
+        </a>
+        <a class="nav-link" routerLink="/cats" routerLinkActive="active"> All Cats </a>
+      </nav>
+
+      @if (isCatsPage()) {
+        <button class="add-btn" (click)="openCreateDialog()">
+          <span class="material-icons">add</span>
+          <span class="add-text">Add Cat</span>
+        </button>
+      } @else {
+        <div class="add-btn-placeholder"></div>
+      }
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="material-icons footer-brand-icon">pets</span>
+        <div class="footer-brand-text">
+          <span class="footer-title">Cat Explorer</span>
+          <span class="footer-subtitle">Angular 21 + Material Design</span>
+        </div>
+      </div>
+
+      <div class="footer-contact">
+        <a class="contact-item" href="mailto:ravivarma0513@gmail.com">
+          <span class="material-icons contact-icon">email</span>
+          ravivarma0513&#64;gmail.com
+        </a>
+        <a class="contact-item" href="https://github.com/Varma0313" target="_blank" rel="noopener">
+          <span class="material-icons contact-icon">code</span>
+          github.com/Varma0313
+        </a>
+        <a
+          class="contact-item"
+          href="https://www.linkedin.com/in/ravivarma-d-76b191233"
+          target="_blank"
+          rel="noopener"
+        >
+          <span class="material-icons contact-icon">work</span>
+          linkedin.com/in/ravivarma-d
+        </a>
+      </div>
+
+      <div class="footer-right">
+        <img class="footer-avatar" src="profile.webp" alt="Ravivarma D" loading="lazy" />
+        <div class="footer-author">
+          <span class="footer-name">Ravivarma D</span>
+          <span class="footer-copy">© 2026 · Built for DATAI2I</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <a
+      class="bottom-nav-item"
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <span class="material-icons">dashboard</span>
+      <span class="bottom-nav-label">Dashboard</span>
+    </a>
+    <a class="bottom-nav-item" routerLink="/cats" routerLinkActive="active">
+      <span class="material-icons">pets</span>
+      <span class="bottom-nav-label">All Cats</span>
+    </a>
+    @if (isCatsPage()) {
+      <button class="bottom-nav-item bottom-nav-add" (click)="openCreateDialog()">
+        <span class="material-icons">add_circle</span>
+        <span class="bottom-nav-label">Add Cat</span>
+      </button>
+    }
+  </nav>
+</div>

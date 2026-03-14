@@ -1,18 +1,78 @@
 <div class="page">
-  <div class="header">
-    <h2>Cat List</h2>
+  <!-- ── LIST HEADER ────────────────────────────── -->
+  <section class="list-section">
+    <div class="list-header">
+      <div class="list-title-row">
+        <h2 class="list-title">All Cats</h2>
+        <span class="list-count">{{ store.totalCats() }}</span>
+      </div>
 
-    <button mat-raised-button color="primary" (click)="openCreateDialog()">Add Cat</button>
-  </div>
+      <div class="search-wrap">
+        <span class="material-icons search-icon">search</span>
+        <input
+          class="search-input"
+          type="text"
+          placeholder="Search by name, description..."
+          [value]="store.searchQuery()"
+          (input)="store.setSearch($any($event.target).value)"
+        />
+        @if (store.searchQuery()) {
+          <button class="clear-btn" (click)="store.setSearch('')">
+            <span class="material-icons">close</span>
+          </button>
+        }
+      </div>
+    </div>
 
-  @if (store.loading()) {
-    <p>Loading cats...</p>
-  }
-
-  <div class="cat-grid">
-    @for (cat of store.cats(); track cat.id) {
-      <app-cat-card [cat]="cat" (delete)="deleteCat($event)" (edit)="editCat($event)">
-      </app-cat-card>
+    <!-- ── SKELETON ──────────────────────────────── -->
+    @if (store.loading()) {
+      <div class="skeleton-list">
+        @for (i of skeletons; track i) {
+          <div class="skeleton-card">
+            <div class="skeleton-avatar skeleton"></div>
+            <div class="skeleton-lines">
+              <div class="skeleton skeleton-title"></div>
+              <div class="skeleton skeleton-sub"></div>
+            </div>
+          </div>
+        }
+      </div>
     }
-  </div>
+
+    <!-- ── ERROR ─────────────────────────────────── -->
+    @if (store.error()) {
+      <div class="error-state">
+        <span class="material-icons error-icon">error_outline</span>
+        <p>{{ store.error() }}</p>
+        <button class="retry-btn" (click)="store.loadCats()">
+          <span class="material-icons">refresh</span>
+          Retry
+        </button>
+      </div>
+    }
+
+    <!-- ── EMPTY ──────────────────────────────────── -->
+    @if (!store.loading() && !store.error() && store.filteredCats().length === 0) {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">sentiment_dissatisfied</span>
+        @if (store.searchQuery()) {
+          <h3>No cats match "{{ store.searchQuery() }}"</h3>
+          <p>Try a different search term</p>
+          <button class="retry-btn" (click)="store.setSearch('')">Clear Search</button>
+        } @else {
+          <h3>No cats yet!</h3>
+          <p>Add your first cat to get started</p>
+        }
+      </div>
+    }
+
+    <!-- ── CAT CARDS GRID ─────────────────────────── -->
+    @if (!store.loading() && !store.error()) {
+      <div class="cats-grid">
+        @for (cat of store.filteredCats(); track cat.id) {
+          <app-cat-card [cat]="cat" (edit)="editCat($event)" (delete)="deleteCat($event)" />
+        }
+      </div>
+    }
+  </section>
 </div>
