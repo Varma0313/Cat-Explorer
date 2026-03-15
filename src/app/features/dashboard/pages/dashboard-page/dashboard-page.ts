@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CatsStore } from '../../../cats/store/cats.store';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -43,14 +44,10 @@ export class DashboardPage implements OnInit {
     const headers = ['Name', 'Age', 'Description'];
     const rows = cats.map((c) => [`"${c.name}"`, `"${c.age}"`, `"${c.description}"`]);
 
-    const csvContent = [headers, ...rows].map((row) => row.join(',')).join('\n');
+    const csvContent = '\uFEFF' + [headers, ...rows].map((row) => row.join(',')).join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `cats-export-${new Date().toISOString().slice(0, 10)}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
+    const fileName = `cats-export-${new Date().toISOString().slice(0, 10)}.csv`;
+    saveAs(blob, fileName);
   }
 }
